@@ -1460,8 +1460,9 @@
         
         function calculateSizes() {
             const board = document.getElementById('gameBoard');
-            game.containerWidth = board.clientWidth - 20;
-            game.cellSize = (game.containerWidth - CONFIG.CELL_GAP * 5) / CONFIG.GRID_SIZE;
+            game.containerWidth = board.clientWidth - 20;  // padding 10px * 2
+            // CSS Grid: 4个格子中间有3个gap
+            game.cellSize = (game.containerWidth - CONFIG.CELL_GAP * (CONFIG.GRID_SIZE - 1)) / CONFIG.GRID_SIZE;
         }
         
         function loadBest() {
