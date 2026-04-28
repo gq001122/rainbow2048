@@ -332,9 +332,198 @@
             .score-box { min-width: 80px; padding: 8px 12px; }
             .score-box .value { font-size: 18px; }
         }
+        
+        /* ========== 引导蒙层 ========== */
+        #guideOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 20, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        #guideOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .guide-title {
+            font-size: 28px;
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            animation: rainbow 3s linear infinite;
+        }
+        
+        /* 演示游戏区域 */
+        .guide-demo-board {
+            width: 220px;
+            height: 220px;
+            background: rgba(0,0,0,0.5);
+            border: 3px solid #0f3460;
+            border-radius: 10px;
+            padding: 10px;
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .guide-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .guide-demo-cell {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        
+        /* 演示方块 */
+        .guide-tile {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .guide-tile-2 {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border: 2px solid #ff6666;
+        }
+        
+        .guide-tile-4 {
+            background: linear-gradient(135deg, #ff8844, #ff6600);
+            border: 2px solid #ffaa66;
+        }
+        
+        /* 手指动画 */
+        .guide-finger {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            font-size: 28px;
+            animation: swipe-finger 2s ease-in-out infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+        
+        @keyframes swipe-finger {
+            0% { transform: translate(0, 0); opacity: 1; }
+            25% { transform: translate(80px, 0); opacity: 1; }
+            50% { transform: translate(80px, 0); opacity: 0.5; }
+            75% { transform: translate(160px, 0); opacity: 1; }
+            100% { transform: translate(160px, 0); opacity: 0; }
+        }
+        
+        /* 合并特效 */
+        .guide-merge-flash {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,136,68,0.5) 50%, transparent 70%);
+            animation: merge-flash 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes merge-flash {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        
+        /* 提示文字 */
+        .guide-hint {
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .guide-hint span {
+            display: inline-block;
+            padding: 0 10px;
+        }
+        
+        /* 开始按钮 */
+        .guide-start-btn {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            color: #fff;
+            padding: 15px 50px;
+            font-size: 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: inherit;
+            animation: pulse-btn 2s ease-in-out infinite;
+            box-shadow: 0 4px 20px rgba(233, 69, 96, 0.5);
+        }
+        
+        .guide-start-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @keyframes pulse-btn {
+            0%, 100% { box-shadow: 0 4px 20px rgba(233, 69, 96, 0.5); }
+            50% { box-shadow: 0 4px 30px rgba(233, 69, 96, 0.8); }
+        }
+        
+        /* 跳过提示 */
+        .guide-skip {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .guide-skip:hover { color: #fff; }
     </style>
 </head>
 <body>
+    <!-- 引导蒙层 -->
+    <div id="guideOverlay">
+        <div class="guide-skip" id="guideSkip">跳过</div>
+        <div class="guide-title">🌈 彩虹2048</div>
+        
+        <div class="guide-demo-board" id="guideDemoBoard">
+            <div class="guide-demo-grid">
+                <div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div>
+                <div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div>
+                <div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div>
+                <div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div><div class="guide-demo-cell"></div>
+            </div>
+            <!-- 初始方块 -->
+            <div class="guide-tile guide-tile-2" id="guideTile1" style="left:10px;top:10px;width:44px;height:44px;">2</div>
+            <div class="guide-tile guide-tile-2" id="guideTile2" style="left:60px;top:60px;width:44px;height:44px;">2</div>
+            <!-- 手指 -->
+            <div class="guide-finger" id="guideFinger">👆</div>
+            <!-- 合并结果 -->
+            <div class="guide-tile guide-tile-4" id="guideTile3" style="left:110px;top:60px;width:44px;height:44px;opacity:0;">4</div>
+        </div>
+        
+        <div class="guide-hint">
+            <span>👆</span> 滑动合并相同数字 <span>👆</span>
+        </div>
+        
+        <button class="guide-start-btn" id="guideStartBtn">开始游戏</button>
+    </div>
+    
     <div id="gameContainer">
         <div class="title">
             <h1>🌈 彩虹2048</h1>
@@ -601,6 +790,131 @@
             setupInput();
             setupButtons();
             initAudio();
+            initGuide();
+        }
+        
+        // ==================== 引导蒙层 ====================
+        function initGuide() {
+            const guideOverlay = document.getElementById('guideOverlay');
+            const guideStartBtn = document.getElementById('guideStartBtn');
+            const guideSkip = document.getElementById('guideSkip');
+            
+            // 检查是否首次进入游戏
+            const hasPlayed = localStorage.getItem('rainbow2048_played');
+            
+            if (hasPlayed) {
+                // 非首次，直接隐藏
+                guideOverlay.classList.add('hidden');
+                return;
+            }
+            
+            // 首次进入，启动引导动画
+            startGuideAnimation();
+            
+            // 点击开始按钮
+            guideStartBtn.addEventListener('click', closeGuide);
+            guideSkip.addEventListener('click', closeGuide);
+            
+            // 点击蒙层任意处也可关闭
+            guideOverlay.addEventListener('click', (e) => {
+                if (e.target === guideOverlay) {
+                    closeGuide();
+                }
+            });
+        }
+        
+        function startGuideAnimation() {
+            const tile1 = document.getElementById('guideTile1');
+            const tile2 = document.getElementById('guideTile2');
+            const tile3 = document.getElementById('guideTile3');
+            const finger = document.getElementById('guideFinger');
+            
+            // 重置状态
+            tile1.style.opacity = '1';
+            tile1.style.left = '10px';
+            tile2.style.opacity = '1';
+            tile2.style.left = '60px';
+            tile3.style.opacity = '0';
+            finger.style.opacity = '1';
+            finger.style.left = '10px';
+            finger.style.top = '10px';
+            
+            // 动画循环
+            let animating = true;
+            
+            function animate() {
+                if (!animating) return;
+                
+                // 重置
+                tile1.style.opacity = '1';
+                tile1.style.left = '10px';
+                tile2.style.opacity = '1';
+                tile2.style.left = '60px';
+                tile3.style.opacity = '0';
+                finger.style.opacity = '1';
+                finger.style.left = '10px';
+                
+                // 延迟后开始动画
+                setTimeout(() => {
+                    if (!animating) return;
+                    
+                    // 手指移动到第一个方块
+                    finger.style.left = '15px';
+                    finger.style.top = '15px';
+                    
+                    // 手指向右滑
+                    setTimeout(() => {
+                        if (!animating) return;
+                        finger.style.left = '65px';
+                        finger.style.top = '65px';
+                        tile1.style.left = '65px';
+                    }, 300);
+                    
+                    // 继续向右滑，触发合并
+                    setTimeout(() => {
+                        if (!animating) return;
+                        finger.style.left = '115px';
+                        tile1.style.left = '115px';
+                        tile2.style.left = '60px'; // tile2移动到tile1原位置
+                    }, 600);
+                    
+                    // 合并效果
+                    setTimeout(() => {
+                        if (!animating) return;
+                        tile1.style.opacity = '0';
+                        tile2.style.opacity = '0';
+                        tile3.style.opacity = '1';
+                        
+                        // 合并闪光
+                        const board = document.getElementById('guideDemoBoard');
+                        const flash = document.createElement('div');
+                        flash.className = 'guide-merge-flash';
+                        flash.style.left = '110px';
+                        flash.style.top = '55px';
+                        board.appendChild(flash);
+                        
+                        setTimeout(() => flash.remove(), 500);
+                    }, 900);
+                    
+                }, 500);
+            }
+            
+            // 开始循环动画
+            animate();
+            setInterval(animate, 3000);
+        }
+        
+        function closeGuide() {
+            const guideOverlay = document.getElementById('guideOverlay');
+            guideOverlay.classList.add('hidden');
+            
+            // 标记已玩过
+            localStorage.setItem('rainbow2048_played', 'true');
+            
+            // 2秒后移除元素
+            setTimeout(() => {
+                guideOverlay.remove();
+            }, 2000);
         }
         
         function setupGame() {
