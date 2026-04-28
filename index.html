@@ -685,53 +685,28 @@
         /* ========== 精力系统 ========== */
         #energyContainer {
             position: fixed;
-            top: 70px;
-            right: 20px;
+            top: 20px;
+            left: 20px;
             z-index: 100;
         }
         
         .energy-bar {
             display: flex;
             align-items: center;
-            background: rgba(0,0,0,0.6);
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,215,0,0.3);
+            background: rgba(0,0,0,0.5);
+            padding: 6px 12px;
+            border-radius: 15px;
         }
         
         .energy-icon {
-            font-size: 16px;
-            margin-right: 6px;
-        }
-        
-        .energy-info {
             font-size: 14px;
-            color: #ffd700;
-            margin-right: 10px;
+            margin-right: 4px;
         }
         
         .energy-value {
+            font-size: 14px;
+            color: #ffd700;
             font-weight: bold;
-        }
-        
-        .energy-max {
-            color: #888;
-            font-size: 12px;
-        }
-        
-        .energy-progress {
-            width: 50px;
-            height: 6px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        
-        .energy-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ffd700, #ff8c00);
-            border-radius: 3px;
-            transition: width 0.3s;
         }
         
         /* 广告弹窗 */
@@ -818,13 +793,7 @@
     <div id="energyContainer">
         <div class="energy-bar">
             <div class="energy-icon">⚡</div>
-            <div class="energy-info">
-                <span class="energy-value" id="energyValue">200</span>
-                <span class="energy-max">/300</span>
-            </div>
-            <div class="energy-progress">
-                <div class="energy-fill" id="energyFill" style="width: 66%"></div>
-            </div>
+            <div class="energy-value" id="energyValue">200</div>
         </div>
     </div>
     
@@ -1013,10 +982,7 @@
         // 更新精力UI
         function updateEnergyUI() {
             const valueEl = document.getElementById('energyValue');
-            const fillEl = document.getElementById('energyFill');
-            
             if (valueEl) valueEl.textContent = energySystem.energy;
-            if (fillEl) fillEl.style.width = (energySystem.energy / ENERGY_CONFIG.max * 100) + '%';
         }
         
         // 检查精力是否足够
