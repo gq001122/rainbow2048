@@ -66,20 +66,19 @@
         
         /* 世界记录按钮 */
         .world-rank-btn {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            border: none;
-            color: #fff;
-            padding: 8px 15px;
-            font-size: 14px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: rgba(255, 215, 0, 0.8);
+            padding: 6px 12px;
+            font-size: 12px;
             font-family: inherit;
-            border-radius: 20px;
+            border-radius: 15px;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
         }
         .world-rank-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.6);
+            background: rgba(255, 215, 0, 0.3);
+            color: #ffd700;
         }
         
         /* 彩虹进度条 */
@@ -1528,7 +1527,10 @@
         function renderWorldRank() {
             const container = document.getElementById('rankListContainer');
             
-            if (WORLD_RANK_DATA.length === 0) {
+            // 只取前50名
+            const top50 = WORLD_RANK_DATA.slice(0, 50);
+            
+            if (top50.length === 0) {
                 container.innerHTML = '<div class="rank-empty">暂无记录，快来成为第一个上榜的吧！</div>';
                 return;
             }
@@ -1536,7 +1538,7 @@
             const myScore = game.best;
             
             let html = '';
-            WORLD_RANK_DATA.forEach((player, index) => {
+            top50.forEach((player, index) => {
                 const position = index + 1;
                 const positionIcon = position <= 3 ? ['🥇', '🥈', '🥉'][position - 1] : position;
                 const isMe = player.score === myScore && index < 20;
