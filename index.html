@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🌈 彩虹2048</title>
+    <title>🌟 传奇2048</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -27,7 +27,7 @@
         }
         .title h1 {
             font-size: 36px;
-            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background: linear-gradient(90deg, #ffd700, #ff8c00, #ff69b4, #ff4500, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -62,6 +62,24 @@
             color: #ffd93d;
             font-size: 24px;
             font-weight: bold;
+        }
+        
+        /* 世界记录按钮 */
+        .world-rank-btn {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border: none;
+            color: #fff;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-family: inherit;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+        }
+        .world-rank-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.6);
         }
         
         /* 彩虹进度条 */
@@ -242,19 +260,19 @@
             100% { transform: scale(1); }
         }
         
-        /* 音效按钮 */
+        /* 音效按钮 - 固定右上角 */
         .sound-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.5);
-            border: 2px solid #fff;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,255,255,0.5);
             border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
             cursor: pointer;
-            z-index: 50;
+            z-index: 999;
         }
         .sound-toggle:hover { transform: scale(1.1); }
         
@@ -493,13 +511,184 @@
             cursor: pointer;
         }
         .guide-skip:hover { color: #fff; }
+        
+        /* ========== 世界排行榜 ========== */
+        #worldRankOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        
+        #worldRankOverlay.show {
+            display: flex;
+        }
+        
+        .rank-modal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #ffd700;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 380px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+        
+        .rank-header {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .rank-header h2 {
+            color: #fff;
+            font-size: 22px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .rank-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        .rank-close:hover { opacity: 1; }
+        
+        .rank-content {
+            padding: 15px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        /* 我的记录 */
+        .my-record {
+            background: rgba(255, 215, 0, 0.15);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .my-record h3 {
+            color: #ffd700;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .my-record .score {
+            font-size: 36px;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .my-record .rank-info {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        /* 排行榜 */
+        .rank-list h3 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .rank-item:nth-child(1) { background: rgba(255, 215, 0, 0.2); }
+        .rank-item:nth-child(2) { background: rgba(192, 192, 192, 0.15); }
+        .rank-item:nth-child(3) { background: rgba(205, 127, 50, 0.15); }
+        
+        .rank-position {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .rank-item:nth-child(1) .rank-position { color: #ffd700; }
+        .rank-item:nth-child(2) .rank-position { color: #c0c0c0; }
+        .rank-item:nth-child(3) .rank-position { color: #cd7f32; }
+        
+        .rank-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .rank-info {
+            flex: 1;
+        }
+        
+        .rank-name {
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        
+        .rank-score {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+        
+        /* 好友标签 */
+        .friend-tag {
+            background: #07c160;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+        
+        /* 空状态 */
+        .rank-empty {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+        }
     </style>
 </head>
 <body>
     <!-- 引导蒙层 -->
     <div id="guideOverlay">
         <div class="guide-skip" id="guideSkip">跳过</div>
-        <div class="guide-title">🌈 彩虹2048</div>
+        <div class="guide-title">🌟 传奇2048</div>
         
         <div class="guide-demo-board" id="guideDemoBoard">
             <div class="guide-demo-grid">
@@ -526,7 +715,7 @@
     
     <div id="gameContainer">
         <div class="title">
-            <h1>🌈 彩虹2048</h1>
+            <h1>🌟 传奇2048</h1>
         </div>
         
         <div class="score-panel">
@@ -538,6 +727,9 @@
                 <div class="label">最高记录</div>
                 <div class="value" id="best">0</div>
             </div>
+            <button class="world-rank-btn" id="worldRankBtn">
+                🌍 世界记录
+            </button>
         </div>
         
         <div class="rainbow-progress">
@@ -589,6 +781,32 @@
             <div class="legend-item" style="background:#ffaa00;">512</div>
             <div class="legend-item" style="background:#ff0;">1024</div>
             <div class="legend-item" style="background:linear-gradient(135deg,#f0f,#ff0);">2048</div>
+        </div>
+    </div>
+    
+    <!-- 世界排行榜浮层 -->
+    <div id="worldRankOverlay">
+        <div class="rank-modal">
+            <div class="rank-header">
+                <h2>🏆 世界记录</h2>
+                <button class="rank-close" id="rankCloseBtn">×</button>
+            </div>
+            <div class="rank-content">
+                <!-- 我的记录 -->
+                <div class="my-record">
+                    <h3>👤 我的记录</h3>
+                    <div class="score" id="myRankScore">0</div>
+                    <div class="rank-info">全球排名 #<span id="myRankPosition">-</span></div>
+                </div>
+                
+                <!-- 世界排行榜 -->
+                <div class="rank-list">
+                    <h3>🌍 全球排行榜</h3>
+                    <div id="rankListContainer">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1263,6 +1481,83 @@
             document.getElementById('soundToggle').addEventListener('click', () => {
                 toggleSound();
             });
+            
+            // 世界记录按钮
+            document.getElementById('worldRankBtn').addEventListener('click', openWorldRank);
+            document.getElementById('rankCloseBtn').addEventListener('click', closeWorldRank);
+            document.getElementById('worldRankOverlay').addEventListener('click', (e) => {
+                if (e.target.id === 'worldRankOverlay') {
+                    closeWorldRank();
+                }
+            });
+        }
+        
+        // ==================== 世界排行榜 ====================
+        // 模拟数据（实际项目中替换为真实API）
+        const WORLD_RANK_DATA = [
+            { name: '游戏达人', score: 88640, avatar: '🎮', isFriend: false },
+            { name: '小明', score: 72450, avatar: '😎', isFriend: true },
+            { name: '数字大师', score: 65320, avatar: '🏆', isFriend: false },
+            { name: '小红', score: 58900, avatar: '🌟', isFriend: true },
+            { name: '2048高手', score: 52180, avatar: '💯', isFriend: false },
+            { name: '张三', score: 45670, avatar: '🎯', isFriend: false },
+            { name: '李四', score: 38920, avatar: '🔥', isFriend: false },
+            { name: '王五', score: 31450, avatar: '⚡', isFriend: false },
+        ];
+        
+        function openWorldRank() {
+            const overlay = document.getElementById('worldRankOverlay');
+            overlay.classList.add('show');
+            
+            // 显示我的记录
+            const myScore = game.best;
+            document.getElementById('myRankScore').textContent = myScore;
+            
+            // 计算我的排名
+            const myRank = WORLD_RANK_DATA.filter(p => p.score > myScore).length + 1;
+            document.getElementById('myRankPosition').textContent = myRank;
+            
+            // 渲染排行榜
+            renderWorldRank();
+        }
+        
+        function closeWorldRank() {
+            document.getElementById('worldRankOverlay').classList.remove('show');
+        }
+        
+        function renderWorldRank() {
+            const container = document.getElementById('rankListContainer');
+            
+            if (WORLD_RANK_DATA.length === 0) {
+                container.innerHTML = '<div class="rank-empty">暂无记录，快来成为第一个上榜的吧！</div>';
+                return;
+            }
+            
+            const myScore = game.best;
+            
+            let html = '';
+            WORLD_RANK_DATA.forEach((player, index) => {
+                const position = index + 1;
+                const positionIcon = position <= 3 ? ['🥇', '🥈', '🥉'][position - 1] : position;
+                const isMe = player.score === myScore && index < 20;
+                
+                html += `
+                    <div class="rank-item" ${isMe ? 'style="border: 2px solid #ffd700;"' : ''}>
+                        <div class="rank-position">${positionIcon}</div>
+                        <div class="rank-avatar">${player.avatar}</div>
+                        <div class="rank-info">
+                            <div class="rank-name">
+                                ${player.name}
+                                ${player.isFriend ? '<span class="friend-tag">好友</span>' : ''}
+                                ${isMe ? '<span class="friend-tag" style="background:#ffd700;color:#333;">我</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="rank-score">${player.score.toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
         }
         
         // 启动游戏
